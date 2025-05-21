@@ -19,7 +19,7 @@ const NavBar = () => {
         <Link to="/menu">CONTACT us</Link>
       </li>
       <li>
-        <Link to="/dashboard">DASHBOARD</Link>
+        <Link to="/dashboard/cart">DASHBOARD</Link>
       </li>
       <li>
         <Link to="/menu">Our Menu</Link>
@@ -72,12 +72,12 @@ const NavBar = () => {
               {navOption}
             </ul>
           </div>
-          <a className="btn btn-ghost font-Cinzel text-2xl flex flex-col">
+          <Link to={'/'} className="font-extrabold  font-Cinzel text-2xl flex flex-col">
             BISTRO BOSS
             <span className="text-xl font-extralight -mt-3">
               R e s t a u r a n t
             </span>
-          </a>
+          </Link>
         </div>
         <div className="navbar-end hidden lg:flex">
           <ul className="menu menu-horizontal font-Inter font-semibold items-center uppercase px-1">
@@ -100,7 +100,7 @@ const NavBar = () => {
               </Link>
             )}
             {user ? (
-              <img className="rounded-full w-7" src={userPhoto} alt="" />
+            <Link to={'/dashboard/userHome'}><img className="rounded-full w-8 h-8" src={userPhoto} alt="" /></Link>
             ) : (
               <CgProfile className="text-2xl" />
             )}

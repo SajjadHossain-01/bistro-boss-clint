@@ -16,7 +16,6 @@ const Login = () => {
   const { loginWithGoogle, setUser, user,logInWithEmailAndPass } = useContext(AuthContext);
   const navigate =useNavigate()
   const location =useLocation()
-
   const from = location.state?.from?.pathname || "/";
   // const [captchaInput, setCaptchaInput] = useState('');
   // const [isCaptchaValid, setIsCaptchaValid] = useState(false);
@@ -40,7 +39,7 @@ const Login = () => {
         icon: "success",
         draggable: true,
       });
-      navigate('/')
+      navigate(from, { replace: true });
     })
   };
 
@@ -48,8 +47,11 @@ const Login = () => {
    
     loginWithGoogle().then((result) => {
       const user = result.user;
-      console.log(user);
-      setUser(user);
+        Swal.fire({
+        title: "Well Done",
+        icon: "success",
+        draggable: true,
+      });
       navigate(from, { replace: true });
     });
   };

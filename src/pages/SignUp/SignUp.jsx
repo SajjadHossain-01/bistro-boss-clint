@@ -6,8 +6,13 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/Authprovider";
 const SignUp = () => {
-  const { SignInWithEmailAndPass, setUser,loginWithGoogle } = useContext(AuthContext);
-  const navigate =useNavigate()
+  const {
+    SignInWithEmailAndPass,
+    setUser,
+    loginWithGoogle,
+    updateUserProfile,
+  } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -15,14 +20,21 @@ const SignUp = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-    SignInWithEmailAndPass(data.email, data.password)
-    .then((result) => {
-      // Signed up 
+    SignInWithEmailAndPass(data.email, data.password).then((result) => {
+      // Signed up
       const user = result.user;
-      console.log(user)
+      console.log(user);
+      updateUserProfile(data.name, data.photoUrl).then(() => {
+
+        
+      });
+      Swal.fire({
+        title: "Well Done",
+        icon: "success",
+        draggable: true,
+      });
       navigate("/");
-    })
+    });
   };
   const handleSigninWighgoogle = () => {
     loginWithGoogle().then((result) => {
@@ -66,6 +78,19 @@ const SignUp = () => {
                   )}
                 </div>
                 <div>
+                  <label className="label font-bold pb-3">PhotoUrl</label>
+                  <input
+                    type="text"
+                    name="photoUrl"
+                    {...register("photoUrl", { required: true })}
+                    className="input input-bordered w-full"
+                    placeholder="photoUrl"
+                  />
+                  {errors.name && (
+                    <span className="text-red-700">This field is required</span>
+                  )}
+                </div>
+                <div>
                   <label className="label font-bold pb-3">Email</label>
                   <input
                     type="email"
@@ -88,7 +113,6 @@ const SignUp = () => {
                     className="input input-bordered w-full"
                     placeholder="Password"
                   />
-                
                 </div>
 
                 <button
@@ -100,7 +124,7 @@ const SignUp = () => {
               </form>
 
               <p className="text-center mt-4 text-sm text-yellow-600">
-              Already registered? {" "}
+                Already registered?{" "}
                 <Link
                   to={"/login"}
                   className="text-yellow-600 font-semibold link-hover"
@@ -115,7 +139,7 @@ const SignUp = () => {
                   <FaFacebook></FaFacebook>
                 </button>
                 <button
-                    onClick={handleSigninWighgoogle}
+                  onClick={handleSigninWighgoogle}
                   className="btn btn-circle btn-outline"
                 >
                   <FaGoogle></FaGoogle>

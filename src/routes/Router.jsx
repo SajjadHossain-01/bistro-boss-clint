@@ -10,9 +10,10 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import Cart from "../pages/DashBoard/Cart/cart";
-import MyHome from "../pages/DashBoard/MyHome.jsx/UserHome";
+
 import UserHome from "../pages/DashBoard/MyHome.jsx/UserHome";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+
 
 
 export const router = createBrowserRouter([
@@ -27,46 +28,33 @@ export const router = createBrowserRouter([
             path: 'menu',
             element: <Menu></Menu>
         }, {
-            path: `/order/:id`,
+            path: `order/:id`,
             element: <Order></Order>
         },
         {
-            path: '/login',
+            path: 'login',
             element: <Login></Login>
         },
         {
-            path: '/signup',
+            path: 'signup',
             element: <SignUp></SignUp>
         },]
     },
 {
-    path:'/dashboard',
-    element:<DashBoard></DashBoard>,
+    path:'dashboard',
+    element: <PrivateRoute><DashBoard></DashBoard></PrivateRoute>,
+    errorElement: <ErrorPage></ErrorPage>,
     children:[
         {
-            path: '/dashboard/UserHome',
+            path: 'userHome',
             element:<UserHome></UserHome>
         },
         {
-            path: '/dashboard/cart',
+            path: 'cart',
             element:<Cart></Cart>
         },
-        {
-            path: '/dashboard/cart',
-            element:<Cart></Cart>
-        },
-        {
-            path: '/dashboard/cart',
-            element:<Cart></Cart>
-        },
-        {
-            path: '/dashboard/cart',
-            element:<Cart></Cart>
-        },
-        {
-            path: '/dashboard/cart',
-            element:<Cart></Cart>
-        }
+     
+        // adim route
     ]
 
 }
