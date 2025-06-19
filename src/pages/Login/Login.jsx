@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import loginBg from "../../assets/others/authentication.png";
 import loginimg from "../../assets/others/authentication2.png";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 // import {
 //     loadCaptchaEnginge,
 //     LoadCanvasTemplate,
@@ -11,11 +11,14 @@ import Swal from 'sweetalert2'
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import { AuthContext } from "../../Providers/Authprovider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Login = () => {
-  const { loginWithGoogle, setUser, user,logInWithEmailAndPass } = useContext(AuthContext);
-  const navigate =useNavigate()
-  const location =useLocation()
+  const { loginWithGoogle, setUser, user, logInWithEmailAndPass } =
+    useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+  const location = useLocation();
   const from = location.state?.from?.pathname || "/";
   // const [captchaInput, setCaptchaInput] = useState('');
   // const [isCaptchaValid, setIsCaptchaValid] = useState(false);
@@ -23,31 +26,15 @@ const Login = () => {
   //     loadCaptchaEnginge(6); // load 6 character captcha
   // }, []);
 
-  console.log(user);
   const handleLogIn = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
-    logInWithEmailAndPass(email, password)
-    .then((result)=>{
-      const user = result.user;
-      
-      Swal.fire({
-        title: "Well Done",
-        icon: "success",
-        draggable: true,
-      });
-      navigate(from, { replace: true });
-    })
-  };
 
-  const handleSigninWighgoogle = () => {
-   
-    loginWithGoogle().then((result) => {
-      const user = result.user;
-        Swal.fire({
+    logInWithEmailAndPass(email, password).then((result) => {
+      console.log(result)
+      Swal.fire({
         title: "Well Done",
         icon: "success",
         draggable: true,
@@ -56,7 +43,25 @@ const Login = () => {
     });
   };
 
- 
+  const handleSigninWighgoogle = () => {
+    loginWithGoogle().then((result) => {
+      const user = result.user;
+      const userInfo = {
+        email: user?.email,
+        name: user?.displayName,
+      };
+      axiosPublic.post("/users", userInfo).then((res) => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            title: "Well Done",
+            icon: "success",
+            draggable: true,
+          });
+        }
+      });
+      navigate(from, { replace: true });
+    });
+  };
 
   return (
     <div
@@ -141,7 +146,10 @@ const Login = () => {
 
               <p className="text-center mt-4 text-sm">
                 New here?{" "}
-                <Link to={'/signup'} className="text-yellow-600 font-semibold link-hover">
+                <Link
+                  to={"/signup"}
+                  className="text-yellow-600 font-semibold link-hover"
+                >
                   Create a New Account
                 </Link>
               </p>

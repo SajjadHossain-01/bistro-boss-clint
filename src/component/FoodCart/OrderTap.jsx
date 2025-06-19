@@ -15,7 +15,7 @@ import FoodCart from "./FoodCart";
 
 
 const OrderTap = ({ item }) => {
-    console.log(item.length)
+    
     return (
 
         <div className="w-full">

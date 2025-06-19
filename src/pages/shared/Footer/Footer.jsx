@@ -3,7 +3,7 @@
 const Footer = () => {
     return (
         <div>
-            <footer className="footer gap-0 sm:footer-horizontal text-white mt-16 ">
+            <footer className="footer gap-0 sm:footer-horizontal text-white lg:mt-16 mt-5 ">
                 <aside className="bg-[#1F2937] w-full h-full justify-center  py-30">
                     <h1>CONTACT US</h1>
                     <p>

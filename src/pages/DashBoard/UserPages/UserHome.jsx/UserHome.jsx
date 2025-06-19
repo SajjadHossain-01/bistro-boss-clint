@@ -1,10 +1,11 @@
 import { FaWallet } from "react-icons/fa6";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "../../../../hooks/useAuth";
+
 
 
 const UserHome = () => {
   const { user } = useAuth();
-console.log(user)
+
   return (
     <div className="ml-6">
       <h1 className="font-Cinzel text-2xl my-9">Hi, Welcome Back</h1>

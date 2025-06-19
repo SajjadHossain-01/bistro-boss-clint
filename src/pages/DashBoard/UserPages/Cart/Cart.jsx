@@ -1,14 +1,28 @@
 import { FaTrashAlt } from "react-icons/fa";
-import useCart from "../../../hooks/useCart";
+import useCart from "../../../../hooks/useCart";
 import Swal from "sweetalert2";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import SectionTitle from "../../../component/SectionTitle/SectionTitle";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import SectionTitle from "../../../../component/SectionTitle/SectionTitle";
+import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
   const totalPrice = cart.reduce((total, item) => total + item.price, 0);
+  const tolatPriceTaka = totalPrice*120;
   const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxiosPublic();
+  const handleBkasPayment = async () => {
 
+    axiosPublic.post('/bkash-checkout',{
+      amount:tolatPriceTaka, 
+      callbackURL:'https://bistro-boss-server-snowy-one.vercel.app/bkash-callback', 
+      orderID:"12345", 
+      reference:"12345"
+    }).then((response)=>{
+      console.log(response)
+      window.location.href = response?.data
+    })
+  };
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -45,7 +59,12 @@ const Cart = () => {
         <div className="flex justify-between items-center mb-8 pt-12 font-Cinzel font-semibold mx-12">
           <h2 className="text-2xl">Items: {cart.length}</h2>
           <h2 className="text-2xl">Total Price: {totalPrice}</h2>
-          <button className="btn bg-[#D1A054] text-white">Pay</button>
+          <button
+            onClick={handleBkasPayment}
+            className="btn bg-[#D1A054] text-white"
+          >
+            Pay
+          </button>
         </div>
         <div className="overflow-x-auto mx-12 rounded-t-2xl ">
           <table className="table mb-12  ">
@@ -66,7 +85,7 @@ const Cart = () => {
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
+                        <div className="mask  w-12 h-12">
                           <img
                             src={item.image}
                             alt="Avatar Tailwind CSS Component"
@@ -80,9 +99,9 @@ const Cart = () => {
                   <th>
                     <button
                       onClick={() => handleDelete(item._id)}
-                      className="btn btn-ghost btn-lg"
+                      className="btn btn-ghost btn-md bg-[#B91C1C]"
                     >
-                      <FaTrashAlt className="text-white bg-[#B91C1C] p-1.5 text-xl rounded-sm"></FaTrashAlt>
+                      <FaTrashAlt className="text-white "></FaTrashAlt>
                     </button>
                   </th>
                 </tr>

@@ -6,17 +6,19 @@ import FoodCart from '../../../component/FoodCart/FoodCart';
 import useTitle from '../../../hooks/useTitle';
 import { useParams } from 'react-router-dom';
 import OrderTap from '../../../component/FoodCart/OrderTap';
+import LoadingPage from '../../LoadingPage/LoadingPage';
 
 const Order = () => {
     useTitle("Our Shop")
     const route = useParams().id
     const [tabIndex, setTabIndex] = useState('');
-    const [menu] = useMenu()
+    const [menu,loading] = useMenu()
     const desserts = menu.filter(item => item.category === 'dessert');
     const soups = menu.filter(item => item.category === 'soup');
     const salads = menu.filter(item => item.category === 'salad');
     const pizzas = menu.filter(item => item.category === 'pizza');
     const offereds = menu.filter(item => item.category === 'offered');
+    const drinks = menu.filter(item => item.category === 'drinks');
 
     useEffect(() => {
         if (route === "salad") {
@@ -35,6 +37,10 @@ const Order = () => {
             setTabIndex("offered")
         }
     }, [])
+
+    if(loading){
+        return <LoadingPage></LoadingPage>
+    }
 
     return (
         <div >
@@ -55,6 +61,7 @@ const Order = () => {
                 {tabIndex === "soup" && <OrderTap item={soups}></OrderTap>}
                 {tabIndex === "pizza" && <OrderTap item={pizzas}></OrderTap>}
                 {tabIndex === "dessert" && <OrderTap item={desserts}></OrderTap>}
+                {tabIndex === "drink" && <OrderTap item={drinks}></OrderTap>}
             </div>
 
         </div>

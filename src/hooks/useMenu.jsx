@@ -1,18 +1,28 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosPublic from "./useAxiosPublic";
 
 const useMenu =()=>{
- const [menu, setmenu] = useState([]);
- const [loading, setLoading]=useState(true)   
- useEffect(() => {
-        fetch('http://localhost:5000/menu')
-            .then(res => res.json())
-            .then(data =>{
-                setmenu(data)
-                setLoading(false)
-            });
+const axiospublic = useAxiosPublic()
+    const {data:menu =[], isPending:loading, refetch}=useQuery({
+    queryKey: ['menu'],
+    queryFn: async()=>{
+        const res =await axiospublic.get('/menu');
+        return res.data;
+    } 
+})
+//  useEffect(() => {
+//         fetch('https://bistro-boss-server-snowy-one.vercel.app/menu')
+//             .then(res => res.json())
+//             .then(data =>{
+//                 setmenu(data)
+//                 setLoading(false)
+//             });
 
-    }, [])
-return[menu,loading]
+//     }, [])
+
+
+
+return[menu,loading, refetch]
 }
 
 export default useMenu

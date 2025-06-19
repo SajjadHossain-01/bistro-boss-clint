@@ -5,42 +5,71 @@ import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { AuthContext } from "../../Providers/Authprovider";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 const SignUp = () => {
-  const {
-    SignInWithEmailAndPass,
-    setUser,
-    loginWithGoogle,
-    updateUserProfile,
-  } = useContext(AuthContext);
+    const { SignInWithEmailAndPass, loginWithGoogle, updateUserProfile } =
+    useContext(AuthContext);
+  const axiospublic = useAxiosPublic();
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit =async (data) => {
+   console.log(data);
+const imageFile = { image: data.photoUrl[0] };
+const res = await axiospublic.post(image_hosting_api, imageFile, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+   console.log(res.data.data.display_url)
     SignInWithEmailAndPass(data.email, data.password).then((result) => {
       // Signed up
-      const user = result.user;
-      console.log(user);
-      updateUserProfile(data.name, data.photoUrl).then(() => {
+      
 
-        
+      updateUserProfile(data.name, res.data.data.display_url).then(() => {
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+        };
+        axiospublic.post("/users", userInfo).then((res) => {
+          if (res.data.insertedId) {
+            reset();
+            Swal.fire({
+              title: "Well Done",
+              icon: "success",
+              draggable: true,
+            });
+            navigate("/");
+          }
+        });
       });
-      Swal.fire({
-        title: "Well Done",
-        icon: "success",
-        draggable: true,
-      });
-      navigate("/");
     });
   };
   const handleSigninWighgoogle = () => {
     loginWithGoogle().then((result) => {
       const user = result.user;
-      console.log(user);
-      setUser(user);
+
+      const userInfo = {
+        email: user?.email,
+        name: user?.displayName,
+      };
+      axiospublic.post("/users", userInfo).then((res) => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            title: "Well Done",
+            icon: "success",
+            draggable: true,
+          });
+        }
+      });
       navigate("/");
     });
   };
@@ -79,13 +108,14 @@ const SignUp = () => {
                 </div>
                 <div>
                   <label className="label font-bold pb-3">PhotoUrl</label>
-                  <input
+                  <input type="file" name="photoUrl"{...register("photoUrl", { required: true })} className="file-input w-full" />
+                  {/* <input
                     type="text"
                     name="photoUrl"
                     {...register("photoUrl", { required: true })}
                     className="input input-bordered w-full"
                     placeholder="photoUrl"
-                  />
+                  /> */}
                   {errors.name && (
                     <span className="text-red-700">This field is required</span>
                   )}
